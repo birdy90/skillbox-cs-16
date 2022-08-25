@@ -20,38 +20,38 @@ namespace skillbox_cs_14
             }
         }
         
-        private static async void FirstThread()
+        private static void FirstThread()
         {
-            Console.WriteLine($"Thread #{Task.CurrentId} started");
+            var id = Thread.CurrentThread.ManagedThreadId;
+            Console.WriteLine($"Thread #{id} started");
             while (_shouldContinue)
             {
-                ShowMessage(Task.CurrentId);
+                ShowMessage(id);
                 Thread.Sleep(300);
-                // await Task.Delay(300);
             }
-            Console.WriteLine($"Thread #{Task.CurrentId} stopped");
+            Console.WriteLine($"Thread #{id} stopped");
         }
 
-        private static async void SecondThread()
+        private static void SecondThread()
         {
-            Console.WriteLine($"Thread #{Task.CurrentId} started");
+            var id = Thread.CurrentThread.ManagedThreadId;
+            Console.WriteLine($"Thread #{id} started");
             while (_shouldContinue)
             {
-                ShowMessage(Task.CurrentId);
+                ShowMessage(id);
                 Thread.Sleep(1050);
-                // await Task.Delay(1050);
             }
-            Console.WriteLine($"Thread #{Task.CurrentId} stopped");
+            Console.WriteLine($"Thread #{id} stopped");
         }
         
         public static void Main(string[] args)
         {
-            var task1 = Task.Run(FirstThread);
-            var task2 = Task.Run(SecondThread);
+            var thread1 = new Thread(FirstThread);
+            var thread2 = new Thread(SecondThread);
+            thread1.Start();
+            thread2.Start();
 
             Console.WriteLine("Tasks are run, let's wait till they end...");
-            
-            Task.WaitAll(task1, task2);
 
             Console.WriteLine("All async tasks finished");
             Console.ReadKey();
